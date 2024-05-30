@@ -6,6 +6,7 @@ const app = express();
 
 //Import Routes
 const authRoutes = require('./router/auth');
+const userRoutes = require('./router/user');
 
 //Configure Body Parser
 app.use(express.json());
@@ -18,5 +19,6 @@ app.use(cors());
 
 //Configure Routes
 app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 
 module.exports = app;
