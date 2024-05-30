@@ -6,6 +6,7 @@ const { isAdmin } = require('../middlewares/credentials');
 const api = express.Router();
 
 api.get('/user/me', [userAuth], UserController.getMe);
+api.post('/user/update', [userAuth], UserController.updateProfile);
 api.get('/users', [userAuth, isAdmin], UserController.getUsers);
 api.post('/user', [userAuth, isAdmin], UserController.createUser);
 api.patch('/user/:id', [userAuth, isAdmin], UserController.updateUser);
