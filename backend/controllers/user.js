@@ -136,9 +136,28 @@ async function updateUser(req, res) {
 		}
 	}
 }
+
+async function deleteUser(req, res) {
+	const { id } = req.params;
+
+	if (!id) return res.status(400).json({ error: 'Id is required.' });
+
+	try {
+		const user = await User.findByIdAndDelete({ _id: id });
+		if (!user) {
+			return res.status(404).json({ error: 'User not found.' });
+		}
+		delete user._doc.password;
+		return res.status(200).json(user);
+	} catch (error) {
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
 module.exports = {
 	getMe,
 	getUsers,
 	createUser,
 	updateUser,
+	deleteUser,
 };
