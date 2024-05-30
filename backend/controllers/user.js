@@ -1,7 +1,6 @@
 const User = require('../models/user');
 const { validateUser, validateUserPartial } = require('../schemas/user');
 const { encryptPassword } = require('../utils/authPass');
-const jwt = require('../utils/jwt');
 
 async function getMe(req, res) {
 	const { user_id } = req.user;
