@@ -6,5 +6,6 @@ const api = express.Router();
 
 api.get('/user/me', [userAuth], UserController.getMe);
 api.get('/users', [userAuth], UserController.getUsers);
+api.post('/user', [userAuth], UserController.createUser);
 
 module.exports = api;
