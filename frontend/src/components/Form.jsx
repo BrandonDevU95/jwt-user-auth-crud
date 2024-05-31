@@ -1,15 +1,17 @@
 import * as Yup from 'yup';
 
 import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { USER, USER_CREDENTIALS } from '../constants/localStorage.js';
+import { useEffect, useState } from 'react';
 
-import { USER_CREDENTIALS } from '../constants/localStorage.js';
 import { showToast } from './Toast.jsx';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
 const LoginForm = () => {
+	const navigate = useNavigate();
 	const [showPassword, setShowPassword] = useState(false);
-	const [sessionUser, setSessionUser] = useState(() => {
+	const [userSession, setUserSession] = useState(false);
+	const [userCredential, setUserCredential] = useState(() => {
 		const userCredentials = JSON.parse(
 			localStorage.getItem(USER_CREDENTIALS)
 		);
@@ -18,10 +20,17 @@ const LoginForm = () => {
 		return '';
 	});
 
-	const navigate = useNavigate();
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem(USER));
+		if (user) {
+			navigate('/profile');
+		} else {
+			setUserSession(true);
+		}
+	}, []);
 
 	const initialValues = {
-		identifier: sessionUser,
+		identifier: userCredential,
 		password: '',
 		remember: true,
 	};
@@ -64,9 +73,11 @@ const LoginForm = () => {
 				JSON.stringify({ identifier: values.identifier })
 			);
 		} else {
-			setSessionUser('');
+			setUserCredential('');
 			localStorage.removeItem(USER_CREDENTIALS);
 		}
+
+		localStorage.setItem(USER, JSON.stringify(user));
 
 		showToast(`Welcome ${user.firstname} ${user.lastname}`, 'success');
 
@@ -129,6 +140,8 @@ const LoginForm = () => {
 	const togglePasswordVisibility = () => {
 		setShowPassword(!showPassword);
 	};
+
+	if (!userSession) return null;
 
 	return (
 		<div className="min-h-screen flex items-center justify-center w-full dark:bg-gray-950">
