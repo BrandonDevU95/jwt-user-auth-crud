@@ -122,7 +122,7 @@ async function login(req, res) {
 			maxAge: 7 * 24 * 60 * 60 * 1000, // 1 semana y se elimina la cookie
 		});
 
-		res.status(200).json({ accessToken, refreshToken });
+		res.status(200).json({ message: 'Login successful' });
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ error: 'Internal Server Error' });
