@@ -100,7 +100,7 @@ async function login(req, res) {
 		const isValidPassword = await verifyPassword(password, user.password);
 
 		if (!isValidPassword) {
-			return res.status(400).json({ error: isValidPassword.message });
+			return res.status(400).json({ error: 'Invalid credentials' });
 		}
 
 		const accessToken = jwt.generateToken(user);
