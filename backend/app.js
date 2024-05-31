@@ -15,7 +15,12 @@ app.use(express.json());
 app.use(cookieParser());
 
 //Configure CORS
-app.use(cors());
+app.use(
+	cors({
+		origin: 'http://localhost:5173',
+		credentials: true,
+	})
+);
 
 //Configure Routes
 app.use('/api', authRoutes);

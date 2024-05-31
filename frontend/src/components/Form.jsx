@@ -2,8 +2,8 @@ import { showToast } from './Toast.jsx';
 import { useState } from 'react';
 
 const Form = () => {
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
+	const [username, setUsername] = useState('bvargas');
+	const [password, setPassword] = useState('123456');
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -18,6 +18,7 @@ const Form = () => {
 					username,
 					password,
 				}),
+				credentials: 'include', // Incluir credenciales en la solicitud
 			});
 
 			const data = await response.json();
