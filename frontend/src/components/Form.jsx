@@ -1,9 +1,12 @@
 import { showToast } from './Toast.jsx';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const Form = () => {
 	const [username, setUsername] = useState('bvargas');
 	const [password, setPassword] = useState('123456');
+	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -29,14 +32,16 @@ const Form = () => {
 				setPassword('');
 			} else {
 				showToast('Login successful', 'success');
+				setLoading(true);
 				setUsername('');
 				setPassword('');
-				// setTimeout(() => {
-				// 	window.location.href = '/profile';
-				// }, 2000);
+				setTimeout(() => {
+					navigate('/profile');
+				}, 2000);
 			}
 		} catch (error) {
 			showToast('An error occurred', 'error');
+			setLoading(false);
 		}
 	};
 
@@ -105,6 +110,7 @@ const Form = () => {
 						</a>
 					</div>
 					<button
+						disabled={loading}
 						type="submit"
 						className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
 						Login
