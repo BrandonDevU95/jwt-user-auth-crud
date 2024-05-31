@@ -1,8 +1,11 @@
+import Form from './components/Form';
+import Home from './layouts/Home';
+
 const App = () => {
 	return (
-		<div>
-			<h1 className="text-5xl font-bold underline">Hello world!</h1>
-		</div>
+		<Home>
+			<Form />
+		</Home>
 	);
 };
 
