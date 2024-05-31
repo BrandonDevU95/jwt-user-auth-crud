@@ -15,7 +15,7 @@ async function signup(req, res) {
 
 	const hashedPassword = await encryptPassword(userFields.data.password);
 
-	if (hashedPassword) {
+	if (hashedPassword.error) {
 		return res.status(500).json({ error: hashedPassword.message });
 	}
 
@@ -99,7 +99,7 @@ async function login(req, res) {
 
 		const isValidPassword = await verifyPassword(password, user.password);
 
-		if (isValidPassword.error) {
+		if (!isValidPassword) {
 			return res.status(400).json({ error: isValidPassword.message });
 		}
 
