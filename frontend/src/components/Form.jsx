@@ -4,9 +4,15 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 
 import { showToast } from './Toast.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const LoginForm = () => {
+	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
+
+	const togglePasswordVisibility = () => {
+		setShowPassword(!showPassword);
+	};
 
 	const initialValues = {
 		identifier: '',
@@ -106,7 +112,7 @@ const LoginForm = () => {
 
 	return (
 		<div className="min-h-screen flex items-center justify-center w-full dark:bg-gray-950">
-			<div className="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
+			<div className="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 w-full max-w-80">
 				<h1 className="text-2xl font-bold text-center mb-4 dark:text-gray-200">
 					Welcome Back!
 				</h1>
@@ -141,13 +147,23 @@ const LoginForm = () => {
 									className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
 									Password
 								</label>
-								<Field
-									type="password"
-									id="password"
-									name="password"
-									className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-									placeholder="Enter your password"
-								/>
+								<div className="relative">
+									<Field
+										type={
+											showPassword ? 'text' : 'password'
+										}
+										id="password"
+										name="password"
+										className="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+										placeholder="Enter your password"
+									/>
+									<button
+										type="button"
+										onClick={togglePasswordVisibility}
+										className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
+										{showPassword ? eyeOffIcon : eyeIcon}
+									</button>
+								</div>
 								<ErrorMessage
 									name="password"
 									component="div"
@@ -194,3 +210,30 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
+const eyeIcon = (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		className="h-5 w-5 text-gray-500 icon icon-tabler icons-tabler-outline icon-tabler-eye">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+		<path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+		<path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+	</svg>
+);
+
+const eyeOffIcon = (
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		className="h-5 w-5 text-gray-500 icon icon-tabler icons-tabler-outline icon-tabler-eye-off">
+		<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+		<path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
+		<path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
+		<path d="M3 3l18 18" />
+	</svg>
+);
