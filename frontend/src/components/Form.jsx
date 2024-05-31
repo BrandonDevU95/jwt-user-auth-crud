@@ -2,20 +2,26 @@ import * as Yup from 'yup';
 
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 
+import { USER_CREDENTIALS } from '../constants/localStorage.js';
 import { showToast } from './Toast.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const LoginForm = () => {
 	const [showPassword, setShowPassword] = useState(false);
+	const [sessionUser, setSessionUser] = useState(() => {
+		const userCredentials = JSON.parse(
+			localStorage.getItem(USER_CREDENTIALS)
+		);
+
+		if (userCredentials) return userCredentials.identifier;
+		return '';
+	});
+
 	const navigate = useNavigate();
 
-	const togglePasswordVisibility = () => {
-		setShowPassword(!showPassword);
-	};
-
 	const initialValues = {
-		identifier: '',
+		identifier: sessionUser,
 		password: '',
 		remember: true,
 	};
@@ -50,6 +56,16 @@ const LoginForm = () => {
 		if (!user) {
 			setSubmitting(false);
 			return;
+		}
+
+		if (values.remember) {
+			localStorage.setItem(
+				USER_CREDENTIALS,
+				JSON.stringify({ identifier: values.identifier })
+			);
+		} else {
+			setSessionUser('');
+			localStorage.removeItem(USER_CREDENTIALS);
 		}
 
 		showToast(`Welcome ${user.firstname} ${user.lastname}`, 'success');
@@ -108,6 +124,10 @@ const LoginForm = () => {
 		} catch (error) {
 			showToast('An error occurred', 'error');
 		}
+	};
+
+	const togglePasswordVisibility = () => {
+		setShowPassword(!showPassword);
 	};
 
 	return (
