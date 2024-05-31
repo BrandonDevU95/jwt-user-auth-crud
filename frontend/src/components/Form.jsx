@@ -10,7 +10,32 @@ const Form = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		setLoading(true);
 
+		const data = await loginUser();
+
+		if (!data) {
+			setLoading(false);
+			return;
+		}
+
+		const user = await getUserInfo();
+
+		if (!user) {
+			setLoading(false);
+			return;
+		}
+
+		showToast(`Welcome ${user.firstname} ${user.lastname}`, 'success');
+		setUsername('');
+		setPassword('');
+
+		setTimeout(() => {
+			navigate('/profile');
+		}, 1500);
+	};
+
+	const loginUser = async () => {
 		try {
 			const response = await fetch('http://localhost:3000/api/login', {
 				method: 'POST',
@@ -26,22 +51,37 @@ const Form = () => {
 
 			const data = await response.json();
 
-			if (data.error) {
+			if (!response.ok) {
 				showToast(data.error, 'error');
-				setUsername('');
-				setPassword('');
-			} else {
-				showToast('Login successful', 'success');
-				setLoading(true);
-				setUsername('');
-				setPassword('');
-				setTimeout(() => {
-					navigate('/profile');
-				}, 2000);
+				return;
 			}
+
+			return data;
 		} catch (error) {
 			showToast('An error occurred', 'error');
-			setLoading(false);
+		}
+	};
+
+	const getUserInfo = async () => {
+		try {
+			const response = await fetch('http://localhost:3000/api/user/me', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include',
+			});
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				showToast(data.error, 'error');
+				return;
+			}
+
+			return data;
+		} catch (error) {
+			showToast('An error occurred', 'error');
 		}
 	};
 
