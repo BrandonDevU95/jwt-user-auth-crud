@@ -15,7 +15,7 @@ async function signup(req, res) {
 
 	const hashedPassword = await encryptPassword(userFields.data.password);
 
-	if (hashedPassword.error) {
+	if (hashedPassword) {
 		return res.status(500).json({ error: hashedPassword.message });
 	}
 
