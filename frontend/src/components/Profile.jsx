@@ -1,9 +1,13 @@
+import { removeUserSession } from '../utils/userSession';
+import { showToast } from './Toast';
 import { useNavigate } from 'react-router-dom';
+import { useProfile } from '../contexts/ProfileContext';
 import { useState } from 'react';
 
 const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const navigate = useNavigate();
+	const { setReloadProfile } = useProfile();
 
 	const toggleDropdown = () => {
 		setIsOpen(!isOpen);
@@ -13,8 +17,21 @@ const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 		navigate('/profile');
 	};
 
-	const handleLogoutClick = () => {
-		console.log('Logout clicked');
+	const handleLogoutClick = async () => {
+		const response = await fetch('http://localhost:3000/api/logout', {
+			method: 'GET',
+			credentials: 'include',
+		});
+
+		if (response.ok) {
+			const data = await response.json();
+			showToast(data.message, 'success');
+			removeUserSession();
+			setReloadProfile(true);
+			navigate('/');
+		} else {
+			showToast('Failed to logout', 'error');
+		}
 	};
 
 	return (

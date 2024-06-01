@@ -6,11 +6,13 @@ import { useProfile } from '../contexts/ProfileContext';
 
 const Navbar = () => {
 	const [user, setUser] = useState(null);
-	const { reloadProfile } = useProfile();
+	const { reloadProfile, setReloadProfile } = useProfile();
 
 	useEffect(() => {
+		setReloadProfile(false);
 		const userSession = getUserSession();
 		if (userSession) setUser(userSession);
+		else setUser(null);
 	}, [reloadProfile]);
 
 	const handleMenuToggle = () => {
