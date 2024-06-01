@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-// eslint-disable-next-line react/prop-types
 const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const navigate = useNavigate();
