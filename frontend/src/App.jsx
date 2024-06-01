@@ -1,11 +1,11 @@
 import { AppRouter } from './routes/AppRouter';
-import Home from './layouts/Home';
+import HomeLayout from './layouts/HomeLayout';
 
 const App = () => {
 	return (
-		<Home>
+		<HomeLayout>
 			<AppRouter />
-		</Home>
+		</HomeLayout>
 	);
 };
 
