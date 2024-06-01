@@ -14,7 +14,7 @@ const Navbar = () => {
 		const userSession = getUserSession();
 		if (userSession) setUser(userSession);
 		else setUser(null);
-	}, [reloadProfile]);
+	}, [reloadProfile, setReloadProfile]);
 
 	const handleMenuToggle = () => {
 		const mobileMenu = document.getElementById('mobile-menu');
