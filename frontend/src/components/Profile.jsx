@@ -1,16 +1,27 @@
+import { useEffect, useRef, useState } from 'react';
+
 import { removeUserSession } from '../utils/userSession';
 import { showToast } from './Toast';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../contexts/ProfileContext';
-import { useState } from 'react';
 
 const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
-	const [isOpen, setIsOpen] = useState(false);
 	const navigate = useNavigate();
+	const dropdownRef = useRef(null);
 	const { setReloadProfile } = useProfile();
+	const [isOpen, setIsOpen] = useState(false);
 
 	const toggleDropdown = () => {
 		setIsOpen(!isOpen);
+	};
+
+	const handleClickOutside = (event) => {
+		if (
+			dropdownRef.current &&
+			!dropdownRef.current.contains(event.target)
+		) {
+			setIsOpen(false);
+		}
 	};
 
 	const handleProfileClick = () => {
@@ -34,8 +45,12 @@ const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 		}
 	};
 
+	useEffect(() => {
+		document.addEventListener('mousedown', handleClickOutside);
+	}, [dropdownRef]);
+
 	return (
-		<div className="relative inline-block text-left">
+		<div className="relative inline-block text-left" ref={dropdownRef}>
 			<img
 				src={avatar}
 				width="40"
