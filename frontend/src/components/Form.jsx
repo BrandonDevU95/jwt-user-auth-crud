@@ -83,12 +83,9 @@ const LoginForm = () => {
 		localStorage.setItem(USER, JSON.stringify(user));
 
 		showToast(`Welcome ${user.firstname} ${user.lastname}`, 'success');
+		resetForm();
 		setReloadProfile(true);
-
-		setTimeout(() => {
-			resetForm;
-			navigate('/profile');
-		}, 1500);
+		navigate('/profile');
 	};
 
 	const loginUser = async (username, password) => {
