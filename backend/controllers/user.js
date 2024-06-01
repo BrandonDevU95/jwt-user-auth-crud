@@ -5,13 +5,14 @@ const { encryptPassword } = require('../utils/authPass');
 async function getMe(req, res) {
 	const { user_id } = req.user;
 
-	const response = await User.findById(user_id);
+	const user = await User.findById(user_id);
 
-	if (!response) {
+	if (!user) {
 		return res.status(404).send({ message: 'User not found' });
 	}
 
-	return res.status(200).send(response);
+	delete user._doc.password;
+	return res.status(200).send(user);
 }
 
 async function updateProfile(req, res) {
