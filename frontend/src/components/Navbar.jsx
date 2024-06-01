@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react';
 
 import Profile from './Profile';
 import { getUserSession } from '../utils/userSession';
+import { useProfile } from '../contexts/ProfileContext';
 
 const Navbar = () => {
 	const [user, setUser] = useState(null);
+	const { reloadProfile } = useProfile();
 
 	useEffect(() => {
 		const userSession = getUserSession();
 		if (userSession) setUser(userSession);
-	}, []);
+	}, [reloadProfile]);
 
 	const handleMenuToggle = () => {
 		const mobileMenu = document.getElementById('mobile-menu');

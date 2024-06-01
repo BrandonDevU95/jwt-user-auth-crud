@@ -6,9 +6,12 @@ import { useEffect, useState } from 'react';
 
 import { showToast } from './Toast.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useProfile } from '../contexts/ProfileContext.jsx';
 
 const LoginForm = () => {
 	const navigate = useNavigate();
+	const { setReloadProfile } = useProfile();
+
 	const [showPassword, setShowPassword] = useState(false);
 	const [userSession, setUserSession] = useState(false);
 	const [userCredential, setUserCredential] = useState(() => {
@@ -80,6 +83,7 @@ const LoginForm = () => {
 		localStorage.setItem(USER, JSON.stringify(user));
 
 		showToast(`Welcome ${user.firstname} ${user.lastname}`, 'success');
+		setReloadProfile(true);
 
 		setTimeout(() => {
 			resetForm;
