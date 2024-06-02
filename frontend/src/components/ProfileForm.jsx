@@ -4,10 +4,12 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 
 import { setUserSession } from '../utils/userSession.js';
 import { showToast } from './Toast.jsx';
+import useLogout from '../hooks/useLogout.jsx';
 import { useState } from 'react';
 
 const ProfileForm = ({ user, setReloadProfile }) => {
 	const [update, setUpdate] = useState(false);
+	const logout = useLogout();
 
 	const initialValues = {
 		avatar: user.avatar,
@@ -32,15 +34,20 @@ const ProfileForm = ({ user, setReloadProfile }) => {
 		),
 	});
 
+	const handleCancel = (resetForm) => {
+		setUpdate(false);
+		resetForm();
+	};
+
 	const onSubmit = async (values, { setSubmitting }) => {
 		if (!update) {
 			setUpdate(true);
 			return;
 		}
 
-		if (values.password === '') {
-			delete values.password;
-			delete values.confirmPassword;
+		if (!values.password) {
+			values.password = undefined;
+			values.confirmPassword = undefined;
 		}
 
 		//Compare both objects to see if there are any changes
@@ -49,12 +56,10 @@ const ProfileForm = ({ user, setReloadProfile }) => {
 		);
 
 		if (!changes) {
-			console.log('No changes detected');
 			setUpdate(false);
 			return;
 		}
 
-		//Send the updated values to the server http://localhost:3000/api/user/update
 		try {
 			values.updated_at = new Date();
 
@@ -72,27 +77,23 @@ const ProfileForm = ({ user, setReloadProfile }) => {
 
 			const data = await response.json();
 
-			if (!response.ok) {
-				showToast('Failed to update profile', 'error');
-				setSubmitting(false);
-				return;
-			}
+			if (!response.ok || data.error) {
+				showToast(data.error || 'Failed to update profile', 'error');
+			} else {
+				setUserSession(data);
+				setReloadProfile(true);
+				showToast('Profile updated successfully', 'success');
+				setUpdate(false);
 
-			if (data.error) {
-				showToast(data.error, 'error');
-				setSubmitting(false);
-				return;
+				// Si la contraseña fue actualizada, hacer logout
+				if (values.password) {
+					logout();
+				}
 			}
-
-			setUserSession(data);
-			setReloadProfile(true);
-			showToast('Profile updated successfully', 'success');
-			setUpdate(false);
 		} catch (error) {
-			console.log(error);
 			showToast(error.message, 'error');
+		} finally {
 			setSubmitting(false);
-			return;
 		}
 	};
 
@@ -101,7 +102,7 @@ const ProfileForm = ({ user, setReloadProfile }) => {
 			initialValues={initialValues}
 			validationSchema={validationSchema}
 			onSubmit={onSubmit}>
-			{({ isSubmitting }) => (
+			{({ isSubmitting, resetForm }) => (
 				<Form className="w-full flex flex-col gap-4">
 					{update && (
 						<div className="flex items-start flex-col justify-start">
@@ -260,7 +261,7 @@ const ProfileForm = ({ user, setReloadProfile }) => {
 							<button
 								type="button"
 								disabled={isSubmitting}
-								onClick={() => setUpdate(false)}
+								onClick={() => handleCancel(resetForm)}
 								className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md shadow-sm">
 								Cancel
 							</button>
