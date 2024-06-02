@@ -1,16 +1,23 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
+import AdminRoutes from './AdminRoutes';
 import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
-import ProfilePage from '../pages/ProfilePage';
+import UserRoutes from './UserRoutes';
+
+let credential = '';
 
 export const AppRouter = () => {
 	return (
 		<Routes>
+			{credential === 'admin' && (
+				<Route path="/*" element={<AdminRoutes />} />
+			)}
+			{credential === 'user' && (
+				<Route path="/*" element={<UserRoutes />} />
+			)}
 			<Route path="/" element={<HomePage />} />
-			<Route path="login" element={<LoginPage />} />
-			<Route path="profile" element={<ProfilePage />} />
-			<Route path="*" element={<Navigate to="/" />} />
+			<Route path="*" element={<LoginPage />} />
 		</Routes>
 	);
 };
