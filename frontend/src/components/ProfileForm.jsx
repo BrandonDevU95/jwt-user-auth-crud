@@ -11,12 +11,14 @@ const ProfileForm = ({ user, setReloadProfile }) => {
 	const [update, setUpdate] = useState(false);
 	const logout = useLogout();
 
+	// Asegurarse que `initialValues` siempre tenga valores definidos, incluso si están vacíos.
+	// Esto evita que los campos del formulario cambien de controlados a no controlados.
 	const initialValues = {
-		avatar: user.avatar,
-		firstname: user.firstname,
-		lastname: user.lastname,
-		username: user.username,
-		email: user.email,
+		avatar: user.avatar || '',
+		firstname: user.firstname || '',
+		lastname: user.lastname || '',
+		username: user.username || '',
+		email: user.email || '',
 		password: '',
 		confirmPassword: '',
 	};
@@ -39,15 +41,15 @@ const ProfileForm = ({ user, setReloadProfile }) => {
 		resetForm();
 	};
 
-	const onSubmit = async (values, { setSubmitting }) => {
+	const onSubmit = async (values, { setSubmitting, resetForm }) => {
 		if (!update) {
 			setUpdate(true);
 			return;
 		}
 
 		if (!values.password) {
-			values.password = undefined;
-			values.confirmPassword = undefined;
+			delete values.password;
+			delete values.confirmPassword;
 		}
 
 		//Compare both objects to see if there are any changes
@@ -79,6 +81,7 @@ const ProfileForm = ({ user, setReloadProfile }) => {
 
 			if (!response.ok || data.error) {
 				showToast(data.error || 'Failed to update profile', 'error');
+				resetForm();
 			} else {
 				setUserSession(data);
 				setReloadProfile(true);
@@ -97,9 +100,14 @@ const ProfileForm = ({ user, setReloadProfile }) => {
 		}
 	};
 
+	// enableReinitialize
+	// Este prop permite que Formik reinitialize los valores iniciales cuando `initialValues` cambia.
+	// Esto asegura que los valores del formulario se actualicen correctamente cuando el `user` prop cambia.
+
 	return (
 		<Formik
 			initialValues={initialValues}
+			enableReinitialize={true}
 			validationSchema={validationSchema}
 			onSubmit={onSubmit}>
 			{({ isSubmitting, resetForm }) => (
