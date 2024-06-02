@@ -33,6 +33,16 @@ const userSchema = z.object({
 		.min(6, {
 			message: 'Password must be at least 6 characters long',
 		}),
+	avatar: z
+		.string()
+		.url({
+			message: 'Invalid URL',
+		})
+		.optional(),
+	updated_at: z.date({
+		required_error: 'Updated at is required',
+		invalid_type_error: 'Updated at must be a date',
+	}),
 	role: z.string().optional(),
 	active: z.boolean().optional(),
 });

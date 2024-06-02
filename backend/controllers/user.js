@@ -1,3 +1,4 @@
+const user = require('../models/user');
 const User = require('../models/user');
 const { validateUser, validateUserPartial } = require('../schemas/user');
 const { encryptPassword } = require('../utils/authPass');
@@ -21,6 +22,7 @@ async function updateProfile(req, res) {
 
 	delete userData.active;
 	delete userData.role;
+	userData.updated_at = new Date(userData.updated_at);
 
 	if (!user_id) return res.status(400).json({ error: 'Id is required.' });
 
