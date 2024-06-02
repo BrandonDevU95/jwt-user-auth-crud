@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { removeUserSession } from '../utils/userSession';
-import { showToast } from './Toast';
+import useLogout from '../hooks/useLogout';
 import { useNavigate } from 'react-router-dom';
-import { useProfile } from '../contexts/ProfileContext';
 
 const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 	const navigate = useNavigate();
+	const logout = useLogout();
 	const dropdownRef = useRef(null);
-	const { setReloadProfile } = useProfile();
 	const [isOpen, setIsOpen] = useState(false);
 
 	const toggleDropdown = () => {
@@ -26,23 +24,6 @@ const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 
 	const handleProfileClick = () => {
 		navigate('/profile');
-	};
-
-	const handleLogoutClick = async () => {
-		const response = await fetch('http://localhost:3000/api/logout', {
-			method: 'GET',
-			credentials: 'include',
-		});
-
-		if (response.ok) {
-			const data = await response.json();
-			showToast(data.message, 'success');
-			removeUserSession();
-			setReloadProfile(true);
-			navigate('/');
-		} else {
-			showToast('Failed to logout', 'error');
-		}
 	};
 
 	useEffect(() => {
@@ -86,7 +67,7 @@ const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 						<li>
 							<button
 								id="logout"
-								onClick={handleLogoutClick}
+								onClick={logout}
 								className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
 								Logout
 							</button>
