@@ -224,7 +224,7 @@ async function userRole(req, res) {
 		return res.status(404).send({ message: 'User not found' });
 	}
 
-	return res.status(200).send(user._doc.role);
+	return res.status(200).json({ role: user.role });
 }
 
 module.exports = {
