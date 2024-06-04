@@ -11,5 +11,6 @@ api.get('/users', [userAuth, isAdmin], UserController.getUsers);
 api.post('/user', [userAuth, isAdmin], UserController.createUser);
 api.patch('/user/:id', [userAuth, isAdmin], UserController.updateUser);
 api.delete('/user/:id', [userAuth, isAdmin], UserController.deleteUser);
+api.get('/user/role', [userAuth], UserController.userRole);
 
 module.exports = api;
