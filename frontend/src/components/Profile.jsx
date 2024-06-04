@@ -62,16 +62,18 @@ const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 								</div>
 							</div>
 						</li>
-						<hr className="my-1" />
 						{status === ADMIN_ROLE && (
-							<li>
-								<button
-									id="profile"
-									onClick={handleDasboardClick}
-									className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
-									Dashboard
-								</button>
-							</li>
+							<>
+								<hr className="my-1" />
+								<li>
+									<button
+										id="profile"
+										onClick={handleDasboardClick}
+										className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+										Dashboard
+									</button>
+								</li>
+							</>
 						)}
 						<hr className="my-1" />
 						<li>
