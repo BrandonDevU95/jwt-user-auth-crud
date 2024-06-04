@@ -5,7 +5,7 @@ import { useProfile } from '../contexts/ProfileContext';
 
 const useLogout = () => {
 	const navigate = useNavigate();
-	const { setReloadProfile } = useProfile();
+	const { setReloadProfile, setUserRefresh } = useProfile();
 
 	const logout = async () => {
 		try {
@@ -18,6 +18,7 @@ const useLogout = () => {
 				const data = await response.json();
 				showToast(data.message, 'success');
 				removeUserSession();
+				setUserRefresh(true);
 				setReloadProfile(true);
 				navigate('/');
 			} else {

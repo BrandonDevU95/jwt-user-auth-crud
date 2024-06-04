@@ -10,7 +10,7 @@ import { useProfile } from '../contexts/ProfileContext.jsx';
 
 const LoginForm = () => {
 	const navigate = useNavigate();
-	const { setReloadProfile } = useProfile();
+	const { setReloadProfile, setUserRefresh } = useProfile();
 
 	const [showPassword, setShowPassword] = useState(false);
 	const [userSession, setUserSession] = useState(false);
@@ -84,6 +84,7 @@ const LoginForm = () => {
 
 		showToast(`Welcome ${user.firstname} ${user.lastname}`, 'success');
 		resetForm();
+		setUserRefresh(true);
 		setReloadProfile(true);
 		navigate('/profile');
 	};
