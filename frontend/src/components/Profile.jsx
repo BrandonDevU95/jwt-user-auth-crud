@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { ADMIN_ROLE } from '../constants/Auth';
 import useLogout from '../hooks/useLogout';
 import { useNavigate } from 'react-router-dom';
+import { useProfile } from '../contexts/ProfileContext';
 
 const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 	const navigate = useNavigate();
 	const logout = useLogout();
 	const dropdownRef = useRef(null);
 	const [isOpen, setIsOpen] = useState(false);
+	const { status } = useProfile();
 
 	const toggleDropdown = () => {
 		setIsOpen(!isOpen);
@@ -24,6 +27,10 @@ const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 
 	const handleProfileClick = () => {
 		navigate('/profile');
+	};
+
+	const handleDasboardClick = () => {
+		navigate('/admin');
 	};
 
 	useEffect(() => {
@@ -55,6 +62,17 @@ const Profile = ({ user: { avatar, firstname, lastname, username } }) => {
 								</div>
 							</div>
 						</li>
+						<hr className="my-1" />
+						{status === ADMIN_ROLE && (
+							<li>
+								<button
+									id="profile"
+									onClick={handleDasboardClick}
+									className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+									Dashboard
+								</button>
+							</li>
+						)}
 						<hr className="my-1" />
 						<li>
 							<button
