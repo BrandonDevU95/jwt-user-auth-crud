@@ -7,6 +7,7 @@ const app = express();
 //Import Routes
 const authRoutes = require('./router/auth');
 const userRoutes = require('./router/user');
+const adminRoutes = require('./router/admin');
 
 //Configure Body Parser
 app.use(express.json());
@@ -25,5 +26,6 @@ app.use(
 //Configure Routes
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
+app.use('/api', adminRoutes);
 
 module.exports = app;
