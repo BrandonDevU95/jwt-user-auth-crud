@@ -5,7 +5,7 @@ const HomePage = () => {
 	const navigate = useNavigate();
 
 	const handleLogin = () => {
-		navigate('/login');
+		userSession ? navigate('/profile') : navigate('/login');
 	};
 
 	const userSession = getUserSession();
