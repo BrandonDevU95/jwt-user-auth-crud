@@ -1,10 +1,19 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
+import { getUserSession } from '../utils/userSession';
+
 const ProfileContext = createContext();
 
 export const ProfileProvider = ({ children }) => {
 	const [reloadProfile, setReloadProfile] = useState(false);
-	const [status, setStatus] = useState('no-authenticated');
+	const [status, setStatus] = useState(() => {
+		const user = getUserSession();
+
+		if (user) {
+			return user.role;
+		}
+		return 'no-authenticated';
+	});
 	const [userRefresh, setUserRefresh] = useState(false);
 
 	useEffect(() => {
