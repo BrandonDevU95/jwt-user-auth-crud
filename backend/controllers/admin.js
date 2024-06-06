@@ -3,13 +3,15 @@ const { validateUser, validateUserPartial } = require('../schemas/user');
 const { encryptPassword } = require('../utils/authPass');
 
 async function getUsers(req, res) {
-	const response = await User.find();
+	const user = await User.find();
 
-	if (!response) {
+	if (!user) {
 		return res.status(404).send({ message: 'Users not found' });
 	}
 
-	return res.status(200).send(response);
+	delete user.password;
+
+	return res.status(200).send(user);
 }
 
 async function createUser(req, res) {
