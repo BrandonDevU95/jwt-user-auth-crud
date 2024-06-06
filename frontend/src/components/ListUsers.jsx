@@ -3,7 +3,7 @@ import Modal from './Modal';
 import classnames from 'classnames';
 import { useState } from 'react';
 
-const ListUsers = ({ listUsers }) => {
+const ListUsers = ({ listUsers, reloadListUsers, setReloadListUsers }) => {
 	const [showModal, setShowModal] = useState(false);
 	const [user, setUser] = useState({});
 	return (
@@ -79,6 +79,8 @@ const ListUsers = ({ listUsers }) => {
 			</ul>
 			<Modal
 				user={user}
+				reloadListUsers={reloadListUsers}
+				setReloadListUsers={setReloadListUsers}
 				show={showModal}
 				onClose={() => setShowModal(false)}
 			/>
