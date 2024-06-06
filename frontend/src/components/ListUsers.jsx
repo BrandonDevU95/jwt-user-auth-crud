@@ -1,74 +1,88 @@
 import { ADMIN_ROLE } from '../constants/Auth';
+import Modal from './Modal';
 import classnames from 'classnames';
+import { useState } from 'react';
 
 const ListUsers = ({ listUsers }) => {
-	console.log(listUsers);
+	const [showModal, setShowModal] = useState(false);
+	const [user, setUser] = useState({});
 	return (
-		<ul
-			role="list"
-			className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-			{listUsers.map((user) => (
-				<li
-					key={user._id}
-					className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
-					<div className="flex w-full items-center justify-between space-x-4 p-6">
-						<div className="flex-1 truncate">
-							<div className="flex items-center space-x-3">
-								<h3 className="truncate text-base font-medium text-gray-900">
-									{user.firstname + ' ' + user.lastname}
-								</h3>
-								<span
-									className={classnames(
-										'inline-flex flex-shrink-0 items-center rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ring-green-600/20',
-										user.role === ADMIN_ROLE
-											? 'bg-orange-50 text-orange-600 ring-orange-600'
-											: 'bg-blue-50 text-blue-600 ring-blue-600'
-									)}>
-									{user.role}
-								</span>
-								<span
-									className={classnames(
-										'inline-flex flex-shrink-0 items-center rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ring-green-600/20',
-										user.active
-											? 'bg-green-50 text-green-600 ring-green-600'
-											: 'bg-red-50 text-red-600 ring-red-600'
-									)}>
-									{user.active ? 'Active' : 'Inactive'}
-								</span>
+		<>
+			<ul
+				role="list"
+				className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				{listUsers.map((user) => (
+					<li
+						key={user._id}
+						className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
+						<div className="flex w-full items-center justify-between space-x-4 p-6">
+							<div className="flex-1 truncate">
+								<div className="flex items-center space-x-3">
+									<h3 className="truncate text-base font-medium text-gray-900">
+										{user.firstname + ' ' + user.lastname}
+									</h3>
+									<span
+										className={classnames(
+											'inline-flex flex-shrink-0 items-center rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ring-green-600/20',
+											user.role === ADMIN_ROLE
+												? 'bg-orange-50 text-orange-600 ring-orange-600'
+												: 'bg-blue-50 text-blue-600 ring-blue-600'
+										)}>
+										{user.role}
+									</span>
+									<span
+										className={classnames(
+											'inline-flex flex-shrink-0 items-center rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ring-green-600/20',
+											user.active
+												? 'bg-green-50 text-green-600 ring-green-600'
+												: 'bg-red-50 text-red-600 ring-red-600'
+										)}>
+										{user.active ? 'Active' : 'Inactive'}
+									</span>
+								</div>
+								<p className="truncate text-sm text-gray-500">
+									@{user.username}
+								</p>
 							</div>
-							<p className="truncate text-sm text-gray-500">
-								@{user.username}
-							</p>
+							<img
+								className="h-14 w-14"
+								src={user.avatar}
+								alt={user._id}
+							/>
 						</div>
-						<img
-							className="h-14 w-14"
-							src={user.avatar}
-							alt={user._id}
-						/>
-					</div>
-					<div>
-						<div className="-mt-px flex divide-x divide-gray-200">
-							<div className="flex w-0 flex-1">
-								<button
-									type="button"
-									className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-700 hover:bg-red-100 hover:text-red-900">
-									<TrashIcon />
-									Delete
-								</button>
-							</div>
-							<div className="-ml-px flex w-0 flex-1">
-								<button
-									type="button"
-									className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-700 hover:bg-sky-100 hover:text-sky-900">
-									<EditIcon />
-									Edit
-								</button>
+						<div>
+							<div className="-mt-px flex divide-x divide-gray-200">
+								<div className="flex w-0 flex-1">
+									<button
+										type="button"
+										className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-700 hover:bg-red-100 hover:text-red-900">
+										<TrashIcon />
+										Delete
+									</button>
+								</div>
+								<div className="-ml-px flex w-0 flex-1">
+									<button
+										type="button"
+										onClick={() => {
+											setUser(user);
+											setShowModal(true);
+										}}
+										className="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-700 hover:bg-sky-100 hover:text-sky-900">
+										<EditIcon />
+										Edit
+									</button>
+								</div>
 							</div>
 						</div>
-					</div>
-				</li>
-			))}
-		</ul>
+					</li>
+				))}
+			</ul>
+			<Modal
+				user={user}
+				show={showModal}
+				onClose={() => setShowModal(false)}
+			/>
+		</>
 	);
 };
 
