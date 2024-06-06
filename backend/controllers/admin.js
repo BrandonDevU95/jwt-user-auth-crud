@@ -3,15 +3,7 @@ const { validateUser, validateUserPartial } = require('../schemas/user');
 const { encryptPassword } = require('../utils/authPass');
 
 async function getUsers(req, res) {
-	const { active } = req.query;
-
-	let response = null;
-
-	if (active) {
-		response = await User.find({ active });
-	} else {
-		response = await User.find();
-	}
+	const response = await User.find();
 
 	if (!response) {
 		return res.status(404).send({ message: 'Users not found' });
@@ -135,8 +127,7 @@ async function deleteUser(req, res) {
 		if (!user) {
 			return res.status(404).json({ error: 'User not found.' });
 		}
-		delete user._doc.password;
-		return res.status(200).json(user);
+		return res.status(200).json({ message: 'User deleted successfully.' });
 	} catch (error) {
 		res.status(500).json({ error: 'Internal Server Error' });
 	}
