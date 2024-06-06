@@ -5,6 +5,7 @@ import { showToast } from '../components/Toast';
 
 const AdminPage = () => {
 	const [listUsers, setListUsers] = useState(null);
+	const [reloadListUsers, setReloadListUsers] = useState(false);
 
 	const fetchUsers = async () => {
 		try {
@@ -27,11 +28,19 @@ const AdminPage = () => {
 
 	useEffect(() => {
 		fetchUsers();
-	}, []);
+	}, [reloadListUsers]);
 
 	return (
 		<div className="container py-5 h-[calc(100vh-65px)] mx-auto">
-			{listUsers ? <ListUsers listUsers={listUsers} /> : <NoUsers />}
+			{listUsers ? (
+				<ListUsers
+					listUsers={listUsers}
+					reloadListUsers={reloadListUsers}
+					setReloadListUsers={setReloadListUsers}
+				/>
+			) : (
+				<NoUsers />
+			)}
 		</div>
 	);
 };
