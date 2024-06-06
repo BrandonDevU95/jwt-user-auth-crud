@@ -17,7 +17,6 @@ export const ProfileProvider = ({ children }) => {
 	const [userRefresh, setUserRefresh] = useState(false);
 
 	useEffect(() => {
-		setUserRefresh(false);
 		(async () => {
 			try {
 				const response = await fetch(
@@ -50,6 +49,7 @@ export const ProfileProvider = ({ children }) => {
 				reloadProfile,
 				setReloadProfile,
 				status,
+				userRefresh,
 				setUserRefresh,
 			}}>
 			{children}
