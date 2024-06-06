@@ -4,7 +4,7 @@ const Home = ({ children }) => {
 	return (
 		<main>
 			<Navbar />
-			<div>{children}</div>
+			<div className="bg-slate-100">{children}</div>
 		</main>
 	);
 };
