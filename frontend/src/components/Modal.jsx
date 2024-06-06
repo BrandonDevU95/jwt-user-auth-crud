@@ -3,11 +3,17 @@ import * as Yup from 'yup';
 import { ADMIN_ROLE, USER_ROLE } from '../constants/Auth.js';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 
+import { showToast } from './Toast.jsx';
 import { useState } from 'react';
 
-const Modal = ({ user, show, onClose }) => {
+const Modal = ({
+	user,
+	reloadListUsers,
+	setReloadListUsers,
+	show,
+	onClose,
+}) => {
 	const [showChangePassword, setShowChangePassword] = useState(false);
-	console.log(user);
 	const initialValues = {
 		avatar: user.avatar || '',
 		firstname: user.firstname || '',
@@ -53,9 +59,55 @@ const Modal = ({ user, show, onClose }) => {
 		role: Yup.string().required('Required'),
 	});
 
-	const onSubmit = async (values, { setSubmitting }) => {
-		console.log(Date(values.updatedAt));
-		setSubmitting(false);
+	const onSubmit = async (values, { setSubmitting, resetForm }) => {
+		if (!values.password) {
+			delete values.password;
+			delete values.confirmPassword;
+		}
+
+		delete values.updatedAt;
+		delete values.createdAt;
+
+		//Compare both objects to see if there are any changes
+		const changes = Object.keys(values).some(
+			(key) => values[key] !== user[key]
+		);
+
+		if (!changes) {
+			onClose();
+			return;
+		}
+
+		try {
+			values.updated_at = new Date();
+
+			const response = await fetch(
+				`http://localhost:3000/api/admin/user/${user._id}`,
+				{
+					method: 'PATCH',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					credentials: 'include',
+					body: JSON.stringify(values),
+				}
+			);
+
+			const data = await response.json();
+
+			if (!response.ok || data.error) {
+				showToast(data.error || 'Failed to update profile', 'error');
+				resetForm();
+			} else {
+				showToast('Profile updated successfully', 'success');
+				setReloadListUsers(!reloadListUsers);
+				onClose();
+			}
+		} catch (error) {
+			showToast(error.message, 'error');
+		} finally {
+			setSubmitting(false);
+		}
 	};
 
 	return (
@@ -321,7 +373,7 @@ const Modal = ({ user, show, onClose }) => {
 															Created At:
 														</label>
 														<Field
-															type="createdAt"
+															type="text"
 															id="createdAt"
 															name="createdAt"
 															disabled={true}
@@ -335,7 +387,7 @@ const Modal = ({ user, show, onClose }) => {
 															Update At:
 														</label>
 														<Field
-															type="updatedAt"
+															type="text"
 															id="updatedAt"
 															name="updatedAt"
 															disabled={true}
@@ -343,7 +395,6 @@ const Modal = ({ user, show, onClose }) => {
 														/>
 													</div>
 												</div>
-
 												<div className="inline-flex items-center">
 													<label
 														className="relative flex cursor-pointer items-center rounded-full py-3 pe-3"
