@@ -1,3 +1,4 @@
+import { ADMIN_ROLE } from '../constants/Auth';
 import classnames from 'classnames';
 
 const ListUsers = ({ listUsers }) => {
@@ -19,8 +20,8 @@ const ListUsers = ({ listUsers }) => {
 								<span
 									className={classnames(
 										'inline-flex flex-shrink-0 items-center rounded-full px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset ring-green-600/20',
-										user.role === 'admin'
-											? 'bg-red-50 text-red-600 ring-red-600'
+										user.role === ADMIN_ROLE
+											? 'bg-orange-50 text-orange-600 ring-orange-600'
 											: 'bg-blue-50 text-blue-600 ring-blue-600'
 									)}>
 									{user.role}
