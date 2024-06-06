@@ -85,6 +85,11 @@ async function getUsers(req, res) {
 		response = await User.find();
 	}
 
+	response = response.map((user) => {
+		delete user._doc.password;
+		return user;
+	});
+
 	if (!response) {
 		return res.status(404).send({ message: 'Users not found' });
 	}
