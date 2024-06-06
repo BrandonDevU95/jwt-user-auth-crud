@@ -68,6 +68,8 @@ async function updateUser(req, res) {
 	const { id } = req.params;
 	const userData = req.body;
 
+	userData.updated_at = new Date(userData.updated_at);
+
 	if (!id) return res.status(400).json({ error: 'Id is required.' });
 
 	const userFields = validateUserPartial(userData);
